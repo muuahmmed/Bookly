@@ -19,7 +19,7 @@ class BooklyApp extends StatelessWidget {
       theme: ThemeData(
         scaffoldBackgroundColor: kPrimaryColor,
         appBarTheme: AppBarTheme(
-          systemOverlayStyle: SystemUiOverlayStyle.light,
+          // systemOverlayStyle: SystemUiOverlayStyle.light,
         )
       ),
       themeMode: ThemeMode.dark,
