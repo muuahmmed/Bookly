@@ -28,7 +28,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  carousel_slider:
+  google_fonts:
   flutter_bloc:
   dio:
   conditional_builder_null_safety:
@@ -36,7 +36,6 @@ dependencies:
   shared_preferences:
   bloc_provider:
   fluttertoast:
-  smooth_page_indicator:
   logger:
   shimmer:
   get:
