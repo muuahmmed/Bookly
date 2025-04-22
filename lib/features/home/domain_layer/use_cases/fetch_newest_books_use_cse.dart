@@ -16,4 +16,3 @@ class FetchNewestBooksUseCase extends UseCase<List<BookEntity>, NoParam> {
 }
 
 class NoParam {}
-

@@ -4,9 +4,8 @@ abstract class Failure {
 }
 
 class ServiceException extends Failure {
-  const ServiceException(super.message);
+  ServiceException(String message) : super(message);
 }
-
 class CacheException extends Failure {
   const CacheException(super.message);
 }

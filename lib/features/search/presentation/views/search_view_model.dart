@@ -1,10 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import '../../../../constants.dart';
 import '../../../../core/utils/assets.dart';
 import '../../../../core/utils/styles.dart';
-import '../../../home/presentation/views/widgets/book_details_view.dart';
 
 class SearchViewBody extends StatefulWidget {
   const SearchViewBody({super.key});
@@ -54,7 +51,10 @@ class _SearchViewBodyState extends State<SearchViewBody> {
 
     setState(() {
       _isSearching = true;
-      _searchResults = List.generate(5, (index) => "Result $index for '$query'");
+      _searchResults = List.generate(
+        5,
+        (index) => "Result $index for '$query'",
+      );
       if (!_searchHistory.contains(query)) {
         _searchHistory.insert(0, query);
         if (_searchHistory.length > 5) {
@@ -81,16 +81,17 @@ class _SearchViewBodyState extends State<SearchViewBody> {
             Expanded(
               child: AnimatedSwitcher(
                 duration: const Duration(milliseconds: 300),
-                child: _isSearching
-                    ? _buildSearchResults()
-                    : _searchHistory.isNotEmpty
-                    ? _buildSearchHistory()
-                    : const Center(
-                  child: Text(
-                    'Start typing to search...',
-                    style: TextStyle(color: Colors.white54),
-                  ),
-                ),
+                child:
+                    _isSearching
+                        ? _buildSearchResults()
+                        : _searchHistory.isNotEmpty
+                        ? _buildSearchHistory()
+                        : const Center(
+                          child: Text(
+                            'Start typing to search...',
+                            style: TextStyle(color: Colors.white54),
+                          ),
+                        ),
               ),
             ),
           ],
@@ -154,7 +155,10 @@ class _SearchViewBodyState extends State<SearchViewBody> {
       itemBuilder: (context, index) {
         return ListTile(
           leading: const Icon(Icons.history, color: Colors.white54),
-          title: Text(_searchHistory[index], style: const TextStyle(color: Colors.white)),
+          title: Text(
+            _searchHistory[index],
+            style: const TextStyle(color: Colors.white),
+          ),
           onTap: () => _onHistoryItemTap(_searchHistory[index]),
         );
       },
@@ -168,9 +172,7 @@ class BestSellerViewItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        navigateTo(context, const BookDetailView());
-      },
+      onTap: () {},
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -193,10 +195,7 @@ class BestSellerViewItem extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 5),
-                Text(
-                  'Author Name',
-                  style: TextStyle(color: Colors.grey),
-                ),
+                Text('Author Name', style: TextStyle(color: Colors.grey)),
                 const SizedBox(height: 8),
                 Row(
                   children: [

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:bookly/core/utils/assets.dart';
-import 'home_view_model.dart';
 
 class BookDetailsViewBody extends StatelessWidget {
   const BookDetailsViewBody({super.key});
@@ -17,7 +16,7 @@ class BookDetailsViewBody extends StatelessWidget {
           const CustomBoxAction(),
           const SizedBox(height: 15),
           buildText(),
-          FeatureListViewItem(),
+          // FeatureListViewItem(),
           const SizedBox(height: 20),
         ],
       ),
@@ -29,11 +28,14 @@ class BookDetailsViewBody extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Align(
         alignment: Alignment.centerLeft,
-        child: Text('You may also like', style: TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
-        )),
+        child: Text(
+          'You may also like',
+          style: TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
       ),
     );
   }
@@ -82,10 +84,7 @@ class CustomBookDetails extends StatelessWidget {
         const SizedBox(height: 5),
         const Text(
           'Author Name',
-          style: TextStyle(
-            fontSize: 18,
-            color: Colors.white70,
-          ),
+          style: TextStyle(fontSize: 18, color: Colors.white70),
         ),
         const SizedBox(height: 5),
         Row(
@@ -95,18 +94,12 @@ class CustomBookDetails extends StatelessWidget {
             const SizedBox(width: 6),
             const Text(
               '4.5',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.white,
-              ),
+              style: TextStyle(fontSize: 16, color: Colors.white),
             ),
             const SizedBox(width: 10),
             const Text(
               '(123 Reviews)',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.white,
-              ),
+              style: TextStyle(fontSize: 16, color: Colors.white),
             ),
           ],
         ),
@@ -130,7 +123,7 @@ class CustomBoxAction extends StatelessWidget {
               color: Colors.black.withOpacity(0.1),
               blurRadius: 5,
               offset: const Offset(0, 2),
-            )
+            ),
           ],
         ),
         child: Row(
@@ -179,10 +172,7 @@ class CustomBoxAction extends StatelessWidget {
                 alignment: Alignment.center,
                 child: const Text(
                   'Free preview',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                  ),
+                  style: TextStyle(fontSize: 16, color: Colors.white),
                 ),
               ),
             ),

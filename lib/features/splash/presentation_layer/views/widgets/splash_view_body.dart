@@ -28,13 +28,7 @@ class _SplashViewBodyState extends State<SplashViewBody> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Image.asset(
-          AssetsData.logo,
-          width: 400,
-          height: 400,
-        ),
-      ],
+      children: [Image.asset(AssetsData.logo, width: 400, height: 400)],
     );
   }
 }

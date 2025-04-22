@@ -12,9 +12,9 @@ class ApiServices {
       ..receiveTimeout = const Duration(seconds: 15);
   }
 
-  Future<Map<String, dynamic>> getFeaturedBooks({required String endPoint}) async {
+  Future<Map<String, dynamic>> get({required String endPoint}) async {
     try {
-      final response = await _dio.get(endPoint); // already uses baseUrl
+      final response = await _dio.get(endPoint);
 
       if (response.statusCode == 200) {
         return response.data;
@@ -33,14 +33,16 @@ class ApiServices {
     }
   }
 
-  Failure _handleDioError(DioException e) {
+  Object _handleDioError(DioException e) {
     switch (e.type) {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
         return NetworkException('Connection timed out.');
       case DioExceptionType.badResponse:
-        return ServiceException('Server error: ${e.response?.statusCode ?? 'Unknown'}');
+        return ServiceException(
+          'Server error: ${e.response?.statusCode ?? 'Unknown'}',
+        );
       case DioExceptionType.cancel:
         return ServiceException('Request was cancelled.');
       case DioExceptionType.unknown:
