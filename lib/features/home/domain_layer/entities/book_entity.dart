@@ -16,7 +16,9 @@ class BookEntity {
   final num? price;
   @HiveField(5)
   final int? reviews;
-  @HiveField(6)
+  @HiveField(7)  // Note: Using field 7 to maintain backward compatibility
+  final String? previewUrl;
+
   BookEntity({
     required this.image,
     required this.title,
@@ -25,5 +27,6 @@ class BookEntity {
     required this.price,
     required this.reviews,
     required this.bookId,
+    this.previewUrl,  // New optional field
   });
 }

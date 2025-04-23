@@ -20,6 +20,12 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
           item.volumeInfo?.imageLinks?.smallThumbnail;
     }
 
+    // Get preview URL from accessInfo or create Google Books preview link
+    String? previewUrl = item.accessInfo?.webReaderLink;
+    if (previewUrl == null && item.id != null) {
+      previewUrl = 'https://books.google.com/books?id=${item.id}&pg=PA1&source=gbs_api';
+    }
+
     return BookEntity(
       image: thumbnail,
       title: item.volumeInfo?.title ?? 'No Title',
@@ -28,6 +34,7 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
       price: item.saleInfo?.listPrice?.amount?.toDouble() ?? 0.0,
       reviews: item.volumeInfo?.ratingsCount ?? 0,
       bookId: item.id ?? '',
+      previewUrl: previewUrl,  // Add the preview URL
     );
   }
 

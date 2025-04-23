@@ -18,13 +18,14 @@ class BookEntityAdapter extends TypeAdapter<BookEntity> {
       price: fields[4] as num?,
       reviews: fields[5] as int?,
       bookId: fields[6] as String,
+      previewUrl: fields[7] as String?,  // Added this line
     );
   }
 
   @override
   void write(BinaryWriter writer, BookEntity obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(8)  // Changed from 7 to 8
       ..writeByte(0)
       ..write(obj.image)
       ..writeByte(1)
@@ -38,7 +39,9 @@ class BookEntityAdapter extends TypeAdapter<BookEntity> {
       ..writeByte(5)
       ..write(obj.reviews)
       ..writeByte(6)
-      ..write(obj.bookId);
+      ..write(obj.bookId)
+      ..writeByte(7)
+      ..write(obj.previewUrl);  // Added this line
   }
 
   @override
@@ -47,7 +50,7 @@ class BookEntityAdapter extends TypeAdapter<BookEntity> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is BookEntityAdapter &&
-          runtimeType == other.runtimeType &&
-          typeId == other.typeId;
+          other is BookEntityAdapter &&
+              runtimeType == other.runtimeType &&
+              typeId == other.typeId;
 }

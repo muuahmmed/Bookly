@@ -22,7 +22,6 @@ class _HomeViewModelState extends State<HomeViewModel> {
   @override
   void initState() {
     super.initState();
-    // Fetch data when widget initializes
     context.read<FeaturedCubit>().fetchFeaturedBooks();
     context.read<NewestCubit>().fetchNewestBooks();
   }
@@ -37,10 +36,12 @@ class _HomeViewModelState extends State<HomeViewModel> {
           await context.read<NewestCubit>().fetchNewestBooks();
         },
         child: CustomScrollView(
+          physics: const BouncingScrollPhysics(),
           slivers: [
             SliverAppBar(
               backgroundColor: kPrimaryColor,
               floating: true,
+              elevation: 0,
               title: const _AppBarTitle(),
               actions: const [_SearchButton()],
             ),
@@ -68,6 +69,7 @@ class _AppBarTitle extends StatelessWidget {
         color: Colors.white,
         fontSize: 28,
         fontWeight: FontWeight.bold,
+        letterSpacing: 1.2,
       ),
     );
   }
@@ -80,10 +82,12 @@ class _SearchButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       icon: const Icon(Icons.search, color: Colors.white, size: 28),
-      onPressed: () => Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const SearchView()),
-      ),
+      onPressed:
+          () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const SearchView()),
+          ),
+      tooltip: 'Search Books',
     );
   }
 }
@@ -118,10 +122,11 @@ class _FeaturedBooksLoading extends StatelessWidget {
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: 5,
-        itemBuilder: (context, index) => const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8.0),
-          child: _BookCoverPlaceholder(),
-        ),
+        itemBuilder:
+            (context, index) => const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              child: _BookCoverPlaceholder(),
+            ),
       ),
     );
   }
@@ -140,11 +145,7 @@ class _FeaturedBooksError extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.error_outline,
-              color: Colors.redAccent,
-              size: 64,
-            ),
+            const Icon(Icons.error_outline, color: Colors.redAccent, size: 64),
             const SizedBox(height: 16),
             Text(
               'Couldn\'t Load Featured Books',
@@ -165,20 +166,21 @@ class _FeaturedBooksError extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             ElevatedButton(
-              onPressed: () => context.read<FeaturedCubit>().fetchFeaturedBooks(),
+              onPressed:
+                  () => context.read<FeaturedCubit>().fetchFeaturedBooks(),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.deepOrangeAccent,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 12,
+                ),
               ),
               child: const Text(
                 'Try Again',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
               ),
             ),
           ],
@@ -206,14 +208,12 @@ class _FeaturedBooksList extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: MediaQuery.of(context).size.height * 0.3,
-      child: ListView.builder(
+      child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemCount: books.length,
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        itemBuilder: (context, index) => Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: _BookCover(book: books[index]),
-        ),
+        separatorBuilder: (_, __) => const SizedBox(width: 12),
+        itemBuilder: (context, index) => _BookCover(book: books[index]),
       ),
     );
   }
@@ -227,29 +227,25 @@ class _BookCover extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _navigateToBookDetails(context, book),
+      onTap:
+          () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => BookDetailView(book: book)),
+          ),
       child: AspectRatio(
         aspectRatio: 2.7 / 4,
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
             image: DecorationImage(
-              image: book.image != null
-                  ? NetworkImage(book.image!)
-                  : const AssetImage(AssetsData.logo) as ImageProvider,
+              image:
+                  book.image != null
+                      ? NetworkImage(book.image!)
+                      : const AssetImage(AssetsData.logo) as ImageProvider,
               fit: BoxFit.fill,
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  void _navigateToBookDetails(BuildContext context, BookEntity book) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => BookDetailView(book: book),
       ),
     );
   }
@@ -282,7 +278,10 @@ class _BestSellerTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24.0),
-      child: Text('Best Seller', style: Styles.titleMedium),
+      child: Text(
+        'Best Seller',
+        style: Styles.titleMedium.copyWith(fontWeight: FontWeight.bold),
+      ),
     );
   }
 }
@@ -307,9 +306,13 @@ class _BestSellerListSection extends StatelessWidget {
                   const Icon(Icons.error_outline, color: Colors.red, size: 48),
                   const SizedBox(height: 8),
                   Text('Error loading books', style: Styles.titleMedium),
-                  Text(state.error, style: Styles.titleMedium),
+                  Text(
+                    state.error,
+                    style: Styles.titleMedium.copyWith(color: Colors.grey),
+                  ),
                   TextButton(
-                    onPressed: () => context.read<NewestCubit>().fetchNewestBooks(),
+                    onPressed:
+                        () => context.read<NewestCubit>().fetchNewestBooks(),
                     child: const Text('Retry'),
                   ),
                 ],
@@ -319,7 +322,7 @@ class _BestSellerListSection extends StatelessWidget {
         } else if (state is NewestSuccess) {
           return SliverList(
             delegate: SliverChildBuilderDelegate(
-                  (context, index) => Padding(
+              (context, index) => Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 24.0,
                   vertical: 12.0,
@@ -346,7 +349,11 @@ class _BestSellerItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _navigateToBookDetails(context, book),
+      onTap:
+          () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => BookDetailView(book: book)),
+          ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -395,15 +402,6 @@ class _BestSellerItem extends StatelessWidget {
       ),
     );
   }
-
-  void _navigateToBookDetails(BuildContext context, BookEntity book) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => BookDetailView(book: book),
-      ),
-    );
-  }
 }
 
 class _BookCoverSmall extends StatelessWidget {
@@ -421,12 +419,13 @@ class _BookCoverSmall extends StatelessWidget {
         child: Image.network(
           book.image ?? '',
           fit: BoxFit.fill,
-          errorBuilder: (context, error, stackTrace) => Container(
-            color: Colors.grey[800],
-            child: const Center(
-              child: Icon(Icons.book, color: Colors.grey),
-            ),
-          ),
+          errorBuilder:
+              (context, error, stackTrace) => Container(
+                color: Colors.grey[800],
+                child: const Center(
+                  child: Icon(Icons.book, color: Colors.grey),
+                ),
+              ),
         ),
       ),
     );
