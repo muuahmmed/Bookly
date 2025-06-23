@@ -1,0 +1,19 @@
+part of 'search_cubit.dart';
+
+abstract class SearchStates {}
+
+class SearchInitial extends SearchStates {}
+
+class SearchLoading extends SearchStates {}
+
+class SearchSuccess extends SearchStates {
+  final List<BookEntity> books;
+
+  SearchSuccess(this.books);
+}
+
+class SearchError extends SearchStates {
+  final String message;
+
+  SearchError(this.message);
+}

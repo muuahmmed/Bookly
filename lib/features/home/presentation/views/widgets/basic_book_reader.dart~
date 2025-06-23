@@ -1,0 +1,140 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+class BookReaderScreen extends StatefulWidget {
+  final String bookUrl;
+  final String bookTitle;
+
+  const BookReaderScreen({
+    super.key,
+    required this.bookUrl,
+    required this.bookTitle,
+  });
+
+  @override
+  State<BookReaderScreen> createState() => _BookReaderScreenState();
+}
+
+class _BookReaderScreenState extends State<BookReaderScreen> {
+  late InAppWebViewController webViewController;
+  double progress = 0;
+  bool isLoading = true;
+  bool hasError = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.bookTitle),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: () {
+              setState(() {
+                hasError = false;
+                isLoading = true;
+              });
+              webViewController.reload();
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.open_in_browser),
+            onPressed: _openInExternalBrowser,
+          ),
+          IconButton(
+            icon: const Icon(Icons.bookmark_add_outlined),
+            onPressed: _bookmarkCurrentPage,
+          ),
+        ],
+      ),
+      body: _buildBody(),
+    );
+  }
+
+  Widget _buildBody() {
+    if (hasError) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.error_outline, size: 48, color: Colors.red),
+            const SizedBox(height: 16),
+            const Text('Failed to load book content'),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: _retryLoading,
+              child: const Text('Retry'),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Stack(
+      children: [
+        InAppWebView(
+          initialUrlRequest: URLRequest(url: WebUri(widget.bookUrl)),
+          onWebViewCreated: (controller) {
+            webViewController = controller;
+          },
+          onLoadStart: (controller, url) {
+            setState(() => isLoading = true);
+          },
+          onLoadStop: (controller, url) {
+            setState(() => isLoading = false);
+          },
+          onLoadError: (controller, url, code, message) {
+            setState(() {
+              isLoading = false;
+              hasError = true;
+            });
+          },
+          onProgressChanged: (controller, progress) {
+            setState(() => this.progress = progress / 100);
+          },
+        ),
+        if (isLoading)
+          LinearProgressIndicator(
+            value: progress,
+            backgroundColor: Colors.transparent,
+            color: Theme.of(context).primaryColor,
+          ),
+      ],
+    );
+  }
+
+  Future<void> _openInExternalBrowser() async {
+    try {
+      if (await canLaunchUrl(Uri.parse(widget.bookUrl))) {
+        await launchUrl(
+          Uri.parse(widget.bookUrl),
+          mode: LaunchMode.externalApplication,
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Could not open browser')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: ${e.toString()}')),
+      );
+    }
+  }
+
+  void _bookmarkCurrentPage() {
+    // Implement your bookmarking logic here
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Page bookmarked')),
+    );
+  }
+
+  void _retryLoading() {
+    setState(() {
+      hasError = false;
+      isLoading = true;
+    });
+    webViewController.reload();
+  }
+}
